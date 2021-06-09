@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "371403508734",
+    "project_id": "flutter-fcm-f69a4",
+    "storage_bucket": "flutter-fcm-f69a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:371403508734:android:64c5206a6b641b55188eaf",
+        "android_client_info": {
+          "package_name": "app.meedu.fcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "371403508734-7svaott7qs2ohu439lbr7joo9olf5ru6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOqwtzaKKB1PclJdKu09_2b_vYjVPMmT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "371403508734-7svaott7qs2ohu439lbr7joo9olf5ru6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
