@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const body_parser_1 = require("body-parser");
 const v1_1 = __importDefault(require("./api/routes/v1"));
 class App {
     constructor() {
@@ -21,6 +22,7 @@ class App {
     initialize() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            this.app.use(body_parser_1.json());
             v1_1.default(this.app);
             const PORT = (_a = process.env.PORT) !== null && _a !== void 0 ? _a : 8000;
             this.app.listen(PORT, () => {
