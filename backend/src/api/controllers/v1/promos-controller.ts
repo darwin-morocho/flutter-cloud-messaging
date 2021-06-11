@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import faker from 'faker';
+import { Dependencies } from '../../../dependency-injection';
 import PushNotificationsRepository from '../../../domain/repositories/push-notifications-repository';
-
+import Get from '../../../helpers/get';
 export default class PromosController {
-  constructor(
-    readonly pushNotificationsRepository: PushNotificationsRepository
-  ) {}
+  private pushNotificationsRepository = Get.find<PushNotificationsRepository>(
+    Dependencies.pushNotifications
+  );
 
   sendPromo = (req: Request, res: Response) => {
     const { title, body, imageUrl } = req.body as SendPromoBody;

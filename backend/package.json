@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./src/index.ts",
     "build": "npx tsc",
-    "start":"node ./dist/index.js"
+    "start": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -18,11 +18,13 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "faker": "^5.5.3",
-    "firebase-admin": "^9.9.0"
+    "firebase-admin": "^9.9.0",
+    "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.12",
     "@types/faker": "^5.5.6",
+    "@types/jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.7",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2"
