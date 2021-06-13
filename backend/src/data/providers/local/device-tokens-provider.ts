@@ -9,6 +9,13 @@ export default class DeviceTokensProvider {
     return tmp;
   }
 
+  update(id: number, value: string): void {
+    const index = this.deviceTokens.findIndex((e) => e.id === id);
+    if (index !== -1) {
+      this.deviceTokens[index] = { ...this.deviceTokens[index], value };
+    }
+  }
+
   getTokens(userEmail: string): string[] {
     const list = this.deviceTokens.filter((e) => (e.userEmail = userEmail));
     return list.map((e) => e.value);

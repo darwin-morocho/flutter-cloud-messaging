@@ -15,6 +15,7 @@ export default interface PushNotificationsRepository {
   sendNotificationToTopic(data: PushNotificationTopicData): void;
   sendNotificationToUser(notification: AppNotification): AppNotification;
   saveDeviceToken(deviceToken: DeviceToken): number;
+  updateDeviceToken(id: number, value: string): void;
   deleteDeviceToken(id: number): void;
   getNotifications(userEmail: string): AppNotification[];
   markAsViewed(id: number): void;

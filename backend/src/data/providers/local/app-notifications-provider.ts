@@ -20,6 +20,12 @@ export default class AppNotificationsProvider {
     }
   }
 
+  unreadCount(userEmail: string): number {
+    return this.notications.filter(
+      (e) => e.userEmail === userEmail && e.viewed === false
+    ).length;
+  }
+
   delete(id: number): void {
     const index = this.notications.findIndex((e) => e.id === id);
     if (index !== -1) {

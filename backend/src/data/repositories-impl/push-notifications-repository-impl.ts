@@ -16,6 +16,10 @@ export default class PushNotificationsRepositoryImpl
     readonly appNotificationsProvider: AppNotificationsProvider
   ) {}
 
+  updateDeviceToken(id: number, value: string): void {
+    this.deviceTokensProvider.update(id, value);
+  }
+
   getNotifications(userEmail: string): AppNotification[] {
     return this.appNotificationsProvider.getNotifications(userEmail);
   }
@@ -33,8 +37,11 @@ export default class PushNotificationsRepositoryImpl
       this.appNotificationsProvider.create(notification);
     const tokens = this.deviceTokensProvider.getTokens(notification.userEmail);
     if (tokens.length > 0) {
+      const unreadCount = this.appNotificationsProvider.unreadCount(
+        savedNotification.userEmail
+      );
       this.firebaseAdmin
-        .sendPushNotificationsWithTokens(tokens, savedNotification)
+        .sendPushNotificationsWithTokens(tokens, savedNotification, unreadCount)
         .then((invalidTokens) => {
           // console.log('invalidTokens', invalidTokens);
           for (const token of invalidTokens) {

@@ -15,6 +15,27 @@ export default class NotificationsController {
     res.send(notifications);
   };
 
+  updateDeviceToken = (req: Request, res: Response) => {
+    try {
+      const { pushNotificationToken }: { pushNotificationToken: string } =
+        req.body;
+
+      if (!pushNotificationToken) {
+        throw { code: 400, message: 'invalid body' };
+      }
+      const { deviceTokenId } = req.session;
+      if (deviceTokenId !== undefined) {
+        this.pushNotificationsRepository.updateDeviceToken(
+          deviceTokenId,
+          pushNotificationToken
+        );
+      }
+      res.send('ok');
+    } catch (e: any) {
+      res.status(e.code ?? 500).send(e.message);
+    }
+  };
+
   markAsViewed = (req: Request, res: Response) => {
     try {
       const { notificationId }: { notificationId: number } = req.body;

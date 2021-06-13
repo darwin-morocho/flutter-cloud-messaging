@@ -41,7 +41,8 @@ export default class FirebaseAdmin {
 
   async sendPushNotificationsWithTokens(
     tokens: string[],
-    appNotification: AppNotification
+    appNotification: AppNotification,
+    unreadCount: number
   ): Promise<string[]> {
     try {
       const response = await this.messaging.sendMulticast({
@@ -49,6 +50,21 @@ export default class FirebaseAdmin {
         notification: {
           title: appNotification.title,
           body: appNotification.body,
+        },
+        apns: {
+          payload: {
+            aps: {
+              sound: 'notification.mp3',
+              badge: unreadCount,
+            },
+          },
+        },
+        android: {
+          priority: 'high',
+          notification: {
+            sound: 'notification.mp3',
+            color: '#9c27b0',
+          },
         },
         data: {
           type: appNotification.type,

@@ -7,5 +7,6 @@ export default (): Router => {
   const controller = new NotificationsController();
   router.get('/get', authValidate, controller.getNotifications);
   router.post('/mark-as-viewed', authValidate, controller.markAsViewed);
+  router.post('/update-token', authValidate, controller.updateDeviceToken);
   return router;
 };
