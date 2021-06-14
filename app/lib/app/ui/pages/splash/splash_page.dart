@@ -1,3 +1,4 @@
+import 'package:fcm/app/ui/pages/splash/splash_controller.dart';
 import 'package:fcm/app/ui/routes/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final _controller = SplashController();
+
   @override
   void initState() {
     super.initState();
@@ -18,8 +21,16 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _init() async {
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.pushNamed(context, Routes.HOME);
+    _controller.init();
+    _controller.addListener(() {
+      if (_controller.routeName != null) {
+        Navigator.pushReplacementNamed(
+          context,
+          _controller.routeName!,
+          arguments: _controller.pageArguments,
+        );
+      }
+    });
   }
 
   @override

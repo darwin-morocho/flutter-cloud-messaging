@@ -64,6 +64,7 @@ export default class FirebaseAdmin {
           notification: {
             sound: 'notification.mp3',
             color: '#9c27b0',
+            channelId: 'push_notifications',
           },
         },
         data: {
@@ -78,7 +79,7 @@ export default class FirebaseAdmin {
       if (response.failureCount > 0) {
         for (let i = 0; i < response.responses.length; i++) {
           const item = response.responses[i];
-          if (item.error) {
+          if (item.error) { 
             invalidTokens.push(tokens[i]);
           }
         }

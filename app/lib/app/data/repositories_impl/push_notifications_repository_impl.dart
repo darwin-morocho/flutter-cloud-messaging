@@ -16,6 +16,9 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
   }
 
   @override
+  Future<String?> get deviceToken => _messaging.getToken();
+
+  @override
   Stream<AppNotification> get onNotification {
     // _streamController = _streamController ?? StreamController.broadcast();
     _streamController ??= StreamController.broadcast();
@@ -42,6 +45,8 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
     if (notification != null && type != null) {
       dynamic content;
       if (type == AppNotificationTypes.PROMO) {
+        content = jsonDecode(message.data['content']);
+      } else if (type == AppNotificationTypes.CHAT) {
         content = jsonDecode(message.data['content']);
       }
 

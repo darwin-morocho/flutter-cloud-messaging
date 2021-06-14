@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:fcm/app/domain/models/app_notificatiin.dart';
 import 'package:fcm/app/domain/repositories/push_notifications_repository.dart';
+import 'package:fcm/app/ui/pages/home/home_cotroller.dart';
+import 'package:fcm/app/ui/routes/routes.dart';
+import 'package:fcm/app/ui/utils/progress_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,8 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _pushNotificationsRepository = GetIt.I.get<PushNotificationsRepository>();
   StreamSubscription? _subscription;
+  final _controller = HomeController();
 
   @override
   void initState() {
@@ -25,32 +28,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _init() async {
-    _subscription = _pushNotificationsRepository.onNotification
-        .where(
-      (e) => e.type == AppNotificationTypes.PROMO,
-    )
-        .listen(
+    _subscription = _controller.onPromos.listen(
       (notification) {
+        final productId = notification.content['productId'] as int;
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
             title: Text(notification.title),
             content: Text(notification.body),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    Routes.PROMO,
+                    arguments: productId,
+                  );
+                },
+                child: Text("Go now"),
+              )
+            ],
           ),
         );
       },
     );
-
-    final initialNotification = await _pushNotificationsRepository.initialNotification;
-    if (initialNotification != null) {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: Text("Initial Notificcation ${initialNotification.title}"),
-          content: Text(initialNotification.content.toString()),
-        ),
-      );
-    }
   }
 
   @override
@@ -62,9 +63,26 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: _logOut,
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
       body: Center(
         child: Text("HOME"),
       ),
     );
+  }
+
+  Future<void> _logOut() async {
+    ProgressDialog.show(context);
+    final isOk = await _controller.logOut();
+    Navigator.pop(context);
+    if (isOk) {
+      Navigator.pushNamedAndRemoveUntil(context, Routes.LOGIN, (_) => false);
+    }
   }
 }
