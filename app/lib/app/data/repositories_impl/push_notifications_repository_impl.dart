@@ -1,18 +1,37 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fcm/app/data/providers/local/authentication_client.dart';
+import 'package:fcm/app/data/providers/remote/notifications_api.dart';
 import 'package:fcm/app/domain/models/app_notificatiin.dart';
 import 'package:fcm/app/domain/repositories/push_notifications_repository.dart';
 import 'package:fcm/app/helpers/platform.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
   final FirebaseMessaging _messaging;
+  final AuthenticationClient _authenticationClient;
+  final NotificationsAPI _notificationsAPI;
+  final SharedPreferences _preferences;
 
   StreamController<AppNotification>? _streamController;
 
-  PushNotificationsRepositoryImpl(this._messaging) {
+  PushNotificationsRepositoryImpl(
+    this._messaging,
+    this._notificationsAPI,
+    this._authenticationClient,
+    this._preferences,
+  ) {
     _init();
+  }
+
+  @override
+  Future<int> get unreadCount async {
+    await this._preferences.reload();
+    final count = this._preferences.getInt('unreadCount') ?? 0;
+    return count;
   }
 
   @override
@@ -37,6 +56,12 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
   void _init() {
     FirebaseMessaging.onMessage.listen(_onMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessage);
+    _messaging.onTokenRefresh.listen((deviceToken) async {
+      final accessToken = await _authenticationClient.accessToken;
+      if (accessToken != null) {
+        _notificationsAPI.updateToken(deviceToken, accessToken);
+      }
+    });
   }
 
   AppNotification? _appNotificationFromMessage(RemoteMessage message) {
@@ -55,6 +80,8 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
         body: notification.body ?? '',
         type: type,
         content: content,
+        viewed: true,
+        createdAt: DateTime.now(),
       );
     }
     return null;
@@ -79,5 +106,27 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
   @override
   Future<void> subscribeToTopic(String topic) {
     return _messaging.subscribeToTopic(topic);
+  }
+
+  @override
+  Future<List<AppNotification>> getNotifications() {
+    return _notificationsAPI.getNotifications();
+  }
+
+  @override
+  Future<bool> markAsViewed(int id) {
+    return _notificationsAPI.markAsViewed(id);
+  }
+
+  @override
+  Future<void> updateBadgeCount() async {
+    if (await FlutterAppBadger.isAppBadgeSupported()) {
+      // FlutterAppBadger.removeBadge();
+      final count = await this.unreadCount;
+      if (count > 0) {
+        FlutterAppBadger.updateBadgeCount(count - 1);
+        _preferences.setInt('unreadCount', count - 1);
+      }
+    }
   }
 }

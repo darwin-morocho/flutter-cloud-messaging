@@ -21,6 +21,8 @@ class SplashController extends ChangeNotifier {
     final accessToken = await _authentiactionRepository.accessToken;
     if (accessToken != null) {}
     final initialNotification = await _pushNotificationsRepository.initialNotification;
+
+    print("initialNotification != null ${initialNotification != null}");
     if (initialNotification != null) {
       switch (initialNotification.type) {
         case AppNotificationTypes.PROMO:

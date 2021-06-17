@@ -30,6 +30,9 @@ dependencies:
   flutter_secure_storage: ^4.2.0
   dio: ^4.0.0
   flutter_local_notifications: ^7.0.0-dev.1
+  timeago: ^3.1.0
+  flutter_app_badger: ^1.2.0
+  shared_preferences: ^2.0.6
   
 
 dev_dependencies:

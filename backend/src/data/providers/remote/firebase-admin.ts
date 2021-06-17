@@ -56,6 +56,7 @@ export default class FirebaseAdmin {
             aps: {
               sound: 'notification.mp3',
               badge: unreadCount,
+              contentAvailable: true,
             },
           },
         },
@@ -69,6 +70,7 @@ export default class FirebaseAdmin {
         },
         data: {
           type: appNotification.type,
+          unreadCount: unreadCount.toString(),
           content:
             isJSon(appNotification.content) ??
             appNotification.content.toString(),
@@ -79,11 +81,12 @@ export default class FirebaseAdmin {
       if (response.failureCount > 0) {
         for (let i = 0; i < response.responses.length; i++) {
           const item = response.responses[i];
-          if (item.error) { 
+          if (item.error) {
             invalidTokens.push(tokens[i]);
           }
         }
       }
+
       return invalidTokens;
     } catch (e) {
       console.warn(e);
